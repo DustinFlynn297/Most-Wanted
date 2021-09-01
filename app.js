@@ -95,6 +95,7 @@ function searchByEyeColor(people){
   return foundEyeColor[0];
 }
 //TODO: add other trait filter functions here.
+//Gender Search ////Done//// Code By: Matt Taylor
 function searchByGender(people){
   let userGender = prompt(`What gender would you like to search for?`).toLowerCase();
   let foundGender = people.filter(function(gender){
@@ -106,6 +107,7 @@ function searchByGender(people){
   })
   return foundGender[0];
 }
+//Occupation Search ////Done//// Code By: Matt Taylor
 function searchByOccupation(people){
   let userOccupation = prompt(`What occupation would you like to search for?`).toLowerCase();
   let foundOccupation = people.filter(function(occupation){
@@ -118,6 +120,69 @@ function searchByOccupation(people){
   return foundOccupation[0];
 }
 
+// Weight search function // Done// Code by: Dustin Flynn
+function searchByWeight(people){
+  let userWeight = prompt(`What is the person's weight in pounds you would like to search for?`).toLowerCase();
+  let foundWeight = people.filter(function(weight){
+    if(weight.weight === userWeight)
+      return true;
+    else{
+      return false;
+    }  
+  })
+  return foundWeight[0];
+}
+
+// Height search function // Done// Code by: Dustin Flynn
+function searchByHeight(people){
+  let userHeight = prompt(`What is the person's height in inches you would like to search for?`).toLowerCase();
+  let foundHeight = people.filter(function(height){
+    if(height.height === userHeight)
+      return true;
+    else{
+      return false;
+    }  
+  })
+  return foundHeight[0];
+}
+// ID search function // Done// Code by: Dustin Flynn
+function searchById(people){
+  let userId = prompt(`What is the person's ID number you would like to search for?`).toLowerCase();
+  let foundId = people.filter(function(id){
+    if(id.id === userId)
+      return true;
+    else{
+      return false;
+    }  
+  })
+  return foundId[0];
+}
+
+// Spouse search function // Done// Code by: Dustin Flynn
+function searchBySpouse(people){
+  let userSpouse = prompt(`What is the ID of the person's Spouse you would like to search for?`).toLowerCase();
+  let foundSpouse = people.filter(function(spouse){
+    if(spouse.currentSpouse === userSpouse)
+      return true;
+    else{
+      return false;
+    }  
+  })
+  return foundSpouse[0];
+}
+
+// DOB search function // Done// Code by: Dustin Flynn
+function searchByDob(people){
+  let userDob = prompt(`What is the persons date of birth you would like to search for?\nmm/dd/yyyy`).toLowerCase();
+  let foundDob = people.filter(function(dob){
+    if(dob.dob === userDob)
+      return true;
+    else{
+      return false;
+    }  
+  })
+  return foundDob[0];
+}
 //#endregion
 
 //Display functions.
