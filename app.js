@@ -15,7 +15,7 @@ function app(people){
       searchResults = searchByName(people);
       break;
     case 'no':
-      // TODO: search by traits
+      searchResults = searchCriteria(people);
       break;
       default:
     app(people); // restart app
@@ -23,7 +23,7 @@ function app(people){
   }
   
   // Call the mainMenu function ONLY after you find the SINGLE person you are looking for
-  mainMenu(searchResults, people);
+  mainMenu(searchResults[0], people);
 }
 
 // Menu function to call once you find who you are looking for
@@ -79,109 +79,164 @@ function searchByName(people){
     }
   })
   // TODO:///Done/// find the person single person object using the name they entered. 
-  return foundPerson[0]; // Y'all are jerks. = True
+  return foundPerson; 
 }
 
 //Eye Color Search Function ////Done//// Code By: Matt Taylor
 function searchByEyeColor(people){
   let userEyeColor = prompt(`What eye color would you like to search for?`).toLowerCase();
   let foundEyeColor = people.filter(function(color){
-    if(color.eyeColor === userEyeColor)
+    if(color.eyeColor === userEyeColor){
       return true;
+    }  
     else{
       return false;
     }  
   })
-  return foundEyeColor[0];
+  return foundEyeColor;
 }
 //TODO: add other trait filter functions here.
 //Gender Search ////Done//// Code By: Matt Taylor
 function searchByGender(people){
   let userGender = prompt(`What gender would you like to search for?`).toLowerCase();
   let foundGender = people.filter(function(gender){
-    if(gender.gender === userGender)
+    if(gender.gender === userGender){
       return true;
+    }  
     else{
       return false;
     }  
   })
-  return foundGender[0];
+  return foundGender;
 }
 //Occupation Search ////Done//// Code By: Matt Taylor
 function searchByOccupation(people){
   let userOccupation = prompt(`What occupation would you like to search for?`).toLowerCase();
   let foundOccupation = people.filter(function(occupation){
-    if(occupation.occupation === userOccupation)
+    if(occupation.occupation === userOccupation){
       return true;
+    }  
     else{
       return false;
     }  
   })
-  return foundOccupation[0];
+  return foundOccupation;
 }
 
 // Weight search function // Done// Code by: Dustin Flynn
 function searchByWeight(people){
-  let userWeight = prompt(`What is the person's weight in pounds you would like to search for?`).toLowerCase();
+  let userWeight = prompt(`What is the person's weight in pounds you would like to search for?`);
   let foundWeight = people.filter(function(weight){
-    if(weight.weight === userWeight)
+    if(weight.weight === userWeight){
       return true;
+    }  
     else{
       return false;
     }  
   })
-  return foundWeight[0];
+  return foundWeight;
 }
 
 // Height search function // Done// Code by: Dustin Flynn
 function searchByHeight(people){
-  let userHeight = prompt(`What is the person's height in inches you would like to search for?`).toLowerCase();
+  let userHeight = prompt(`What is the person's height in inches you would like to search for?`);
   let foundHeight = people.filter(function(height){
-    if(height.height === userHeight)
-      return true;
+    if(height.height === userHeight){
+      return true
+    }  
     else{
       return false;
     }  
   })
-  return foundHeight[0];
+  return foundHeight;
 }
 // ID search function // Done// Code by: Dustin Flynn
 function searchById(people){
-  let userId = prompt(`What is the person's ID number you would like to search for?`).toLowerCase();
+  let userId = prompt(`What is the person's ID number you would like to search for?`);
   let foundId = people.filter(function(id){
-    if(id.id === userId)
+    if(id.id === userId){
       return true;
+    }  
     else{
       return false;
     }  
   })
-  return foundId[0];
+  return foundId;
 }
 
 // Spouse search function // Done// Code by: Dustin Flynn
 function searchBySpouse(people){
   let userSpouse = prompt(`What is the ID of the person's Spouse you would like to search for?`).toLowerCase();
   let foundSpouse = people.filter(function(spouse){
-    if(spouse.currentSpouse === userSpouse)
+    if(spouse.currentSpouse === userSpouse){
       return true;
+    }  
     else{
       return false;
     }  
   })
-  return foundSpouse[0];
+  return foundSpouse;
 }
 
 // DOB search function // Done// Code by: Dustin Flynn
 function searchByDob(people){
-  let userDob = prompt(`What is the persons date of birth you would like to search for?\nmm/dd/yyyy`).toLowerCase();
+  let userDob = prompt(`What is the persons date of birth you would like to search for?\nmm/dd/yyyy`).toString();
   let foundDob = people.filter(function(dob){
-    if(dob.dob === userDob)
+    if(dob.dob === userDob){
       return true;
+    }  
     else{
       return false;
     }  
   })
-  return foundDob[0];
+  return foundDob;
+}
+// parent search function // Done// Code by: Matt Taylor
+function searchByParent(people){
+  let userParent = prompt(`What is the ID of the person's Parent you would like to search for?`).toLowerCase();
+  let foundParent = people.filter(function(parent){
+    if(parent.parents === userParent){
+      return true;
+    }  
+    else{
+      return false;
+    }  
+  })
+  return foundSpouse;
+}
+
+// Search Criteria Input Code By: Matt Taylor
+function searchCriteria(people){
+  let userCriteria = prompt(`What criteria would you like to search by?\n
+  Gender, DOB, Height, Weight, Eye Color, Occupation, Parents, Current Spouse`).toLowerCase();
+  switch(userCriteria){
+    case "gender":
+      return searchByGender(people);
+      break;
+    case "dob":
+      return searchByDob(people);
+      break;
+    case "height":
+      return searchByHeight(people);
+      break;
+    case "weight":
+      return searchByWeight(people);
+      break;
+    case "eye color":
+      return searchByEyeColor(people);
+      break;
+    case "occupation":
+      return searchByOccupation(people);
+      break;
+    case "parents":
+      return searchByParent(people);
+      break;
+    case "current spouse":
+      return searchBySpouse(people);
+      break;
+    default:
+      app(people);   
+  }
 }
 //#endregion
 
