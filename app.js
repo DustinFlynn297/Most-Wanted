@@ -94,10 +94,29 @@ function searchByEyeColor(people){
   })
   return foundEyeColor[0];
 }
-
 //TODO: add other trait filter functions here.
-
-
+function searchByGender(people){
+  let userGender = prompt(`What gender would you like to search for?`).toLowerCase();
+  let foundGender = people.filter(function(gender){
+    if(gender.gender === userGender)
+      return true;
+    else{
+      return false;
+    }  
+  })
+  return foundGender[0];
+}
+function searchByOccupation(people){
+  let userOccupation = prompt(`What occupation would you like to search for?`).toLowerCase();
+  let foundOccupation = people.filter(function(occupation){
+    if(occupation.occupation === userOccupation)
+      return true;
+    else{
+      return false;
+    }  
+  })
+  return foundOccupation[0];
+}
 
 //#endregion
 
