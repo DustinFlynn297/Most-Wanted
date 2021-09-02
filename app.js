@@ -61,11 +61,12 @@ function mainMenu(person, people){
 //#endregion
 
 //Filter functions.
-//Ideally you will have a function for each trait.
+//Each Search Function narrows down the search results down to only those with that trait.
+//The Search Criteria Function takes the user input to tell the app which Search Function to perform next.
 /////////////////////////////////////////////////////////////////
 //#region 
 
-//nearly finished function used to search through an array of people to find matching first and last name and return a SINGLE person object.
+//Name Search Function //// Done ////
 function searchByName(people){
   let firstName = promptFor("What is the person's first name?", autoValid);
   let lastName = promptFor("What is the person's last name?", autoValid);
@@ -81,7 +82,6 @@ function searchByName(people){
   // TODO:///Done/// find the person single person object using the name they entered. 
   return foundPerson; 
 }
-
 //Eye Color Search Function ////Done//// Code By: Matt Taylor
 function searchByEyeColor(people){
   let userEyeColor = prompt(`What eye color would you like to search for?`).toLowerCase();
@@ -95,7 +95,6 @@ function searchByEyeColor(people){
   })
   return foundEyeColor;
 }
-//TODO: add other trait filter functions here.
 //Gender Search ////Done//// Code By: Matt Taylor
 function searchByGender(people){
   let userGender = prompt(`What gender would you like to search for?`).toLowerCase();
@@ -202,7 +201,7 @@ function searchByParent(people){
       return false;
     }  
   })
-  return foundSpouse;
+  return foundParent;
 }
 
 // Search Criteria Input Code By: Matt Taylor
