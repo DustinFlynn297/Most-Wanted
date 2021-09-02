@@ -46,7 +46,7 @@ function mainMenu(person, people){
     // TODO: get person's family
     break;
     case "descendants":
-    // TODO: get person's descendants
+    return descendants(person, people); //Displays all descendents for that person.
     break;
     case "restart":
     app(people); // restart
@@ -302,7 +302,43 @@ function displayPerson(person){
 
 //#endregion
 
+//Descendent Functions
+//Functions to help find the descendent of a specific person
+/////////////////////////////////////////////////////////////////
+//#region 
 
+//Designate the person to find the descendents of.
+//Search the DB to find anyone with a parent with that matching ID
+//Does that kid have any kids? Repeat Step 1 and 2 until no other descendents
+
+// Displays descendants by searching parent ID. // Code by Matt & Dustin
+function descendants(person, people){
+  let foundDescendants;
+  for (let j = 0; j < person.length; i++){
+    let parentID = person[j].id;
+    foundDescendants = people.filter(function(parent){
+      for (let i = 0; i < 2; i++){
+        if(parent.parents[i] === parentID){
+          return true;
+        }  
+        else{
+          return false;
+        } 
+      } 
+    })
+  }
+  let totalDescendants = foundDescendants + totalDescendants;
+  if(foundDescendants.length !== 0){
+    totalDescendants = descendants(foundDescendants, people);
+  }
+ 
+  else{
+    displayPeople(totalDescendants);
+    mainMenu(person, people);
+  }
+}
+
+//#endregion
 
 //Validation functions.
 //Functions to validate user input.
