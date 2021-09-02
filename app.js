@@ -79,7 +79,6 @@ function searchByName(people){
       return false;
     }
   })
-  // TODO:///Done/// find the person single person object using the name they entered. 
   return foundPerson; 
 }
 //Eye Color Search Function ////Done//// Code By: Matt Taylor
@@ -205,7 +204,7 @@ function searchByParent(people){
 }
 
 // Search Criteria Input Code By: Matt Taylor
-function searchCriteria(people){
+function searchCriteriaSwitch(people){
   let userCriteria = prompt(`What criteria would you like to search by?\n
   Gender, DOB, Height, Weight, Eye Color, Occupation, Parents, Current Spouse`).toLowerCase();
   switch(userCriteria){
@@ -237,6 +236,20 @@ function searchCriteria(people){
       app(people);   
   }
 }
+let currentSearchResult; // needs to be in function, eventually
+function searchCriteria(people){
+  let continueSearch;
+  currentSearchResult = searchCriteriaSwitch(currentSearchResult = people);
+  continueSearch = promptFor("Do you wish to narrow this search down?", yesNo);
+  if(continueSearch === "yes"){
+    searchCriteria(currentSearchResult)
+  }
+  else if(continueSearch === "no"){
+    displayPeople(currentSearchResult); // Display List of Result
+    app(people); // restart app
+  }
+} 
+
 //#endregion
 
 //Display functions.
