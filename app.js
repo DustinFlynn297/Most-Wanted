@@ -15,7 +15,7 @@ function app(people){
       searchResults = searchByName(people);
       break;
     case 'no':
-      searchResults = searchCriteria(people);
+      searchResults = searchCriteriaInitializer(people);
       break;
       default:
     app(people); // restart app
@@ -81,7 +81,7 @@ function searchByName(people){
   })
   return foundPerson; 
 }
-//Eye Color Search Function ////Done//// Code By: Matt Taylor
+//Eye Color Search Function////Done//// Code By: Matt Taylor
 function searchByEyeColor(people){
   let userEyeColor = prompt(`What eye color would you like to search for?`).toLowerCase();
   let foundEyeColor = people.filter(function(color){
@@ -94,7 +94,7 @@ function searchByEyeColor(people){
   })
   return foundEyeColor;
 }
-//Gender Search ////Done//// Code By: Matt Taylor
+//Gender Search Function////Done//// Code By: Matt Taylor
 function searchByGender(people){
   let userGender = prompt(`What gender would you like to search for?`).toLowerCase();
   let foundGender = people.filter(function(gender){
@@ -107,7 +107,7 @@ function searchByGender(people){
   })
   return foundGender;
 }
-//Occupation Search ////Done//// Code By: Matt Taylor
+//Occupation Search Function////Done//// Code By: Matt Taylor
 function searchByOccupation(people){
   let userOccupation = prompt(`What occupation would you like to search for?`).toLowerCase();
   let foundOccupation = people.filter(function(occupation){
@@ -120,10 +120,9 @@ function searchByOccupation(people){
   })
   return foundOccupation;
 }
-
 // Weight search function // Done// Code by: Dustin Flynn
 function searchByWeight(people){
-  let userWeight = prompt(`What is the person's weight in pounds you would like to search for?`);
+  let userWeight = prompt(`What is the person's weight in pounds you would like to search for?`).map(Number);
   let foundWeight = people.filter(function(weight){
     if(weight.weight === userWeight){
       return true;
@@ -134,10 +133,9 @@ function searchByWeight(people){
   })
   return foundWeight;
 }
-
 // Height search function // Done// Code by: Dustin Flynn
 function searchByHeight(people){
-  let userHeight = prompt(`What is the person's height in inches you would like to search for?`);
+  let userHeight = prompt(`What is the person's height in inches you would like to search for?`).map(Number);
   let foundHeight = people.filter(function(height){
     if(height.height === userHeight){
       return true
@@ -161,7 +159,6 @@ function searchById(people){
   })
   return foundId;
 }
-
 // Spouse search function // Done// Code by: Dustin Flynn
 function searchBySpouse(people){
   let userSpouse = prompt(`What is the ID of the person's Spouse you would like to search for?`).toLowerCase();
@@ -175,7 +172,6 @@ function searchBySpouse(people){
   })
   return foundSpouse;
 }
-
 // DOB search function // Done// Code by: Dustin Flynn
 function searchByDob(people){
   let userDob = prompt(`What is the persons date of birth you would like to search for?\nmm/dd/yyyy`).toString();
@@ -202,52 +198,75 @@ function searchByParent(people){
   })
   return foundParent;
 }
-
-// Search Criteria Input Code By: Matt Taylor
-function searchCriteriaSwitch(people){
-  let userCriteria = prompt(`What criteria would you like to search by?\n
-  Gender, DOB, Height, Weight, Eye Color, Occupation, Parents, Current Spouse`).toLowerCase();
+//Takes user input to determine criteria to search by. //Code By: Matt Taylor
+function userCriteriaInput(){
+  let criteriaString = prompt(`What criteria would you like to search by? Please type the corresponding number(s).\n1:Gender, 2:DOB, 3:Height, 4:Weight, 5:Eye Color, 6:Occupation, 7:Parents, 8:Current Spouse`);
+  let userCriteriaArray = criteriaString.split(" ");
+  if(userCriteriaArray.length > 5){
+    alert("Please enter a maximum of 5 criteria.");
+    userCriteriaInput();
+  }
+  else if(userCriteriaArray.length === 0){
+    alert("Invalid Response.")
+    userCriteriaInput()
+  }
+  else{
+    return userCriteriaArray;
+  }
+  
+}
+// Search Criteria Input //Code By: Matt Taylor
+function searchCriteriaSwitch(userCriteria, people){
   switch(userCriteria){
-    case "gender":
+    case "1":
       return searchByGender(people);
       break;
-    case "dob":
+    case "2":
       return searchByDob(people);
       break;
-    case "height":
+    case "3":
       return searchByHeight(people);
       break;
-    case "weight":
+    case "4":
       return searchByWeight(people);
       break;
-    case "eye color":
+    case "5":
       return searchByEyeColor(people);
       break;
-    case "occupation":
+    case "6":
       return searchByOccupation(people);
       break;
-    case "parents":
+    case "7":
       return searchByParent(people);
       break;
-    case "current spouse":
+    case "8":
       return searchBySpouse(people);
       break;
     default:
       app(people);   
   }
 }
-let currentSearchResult; // needs to be in function, eventually
-function searchCriteria(people){
+// Search Criteria User interface with recursion //Code By: Matt Taylor
+function searchCriteria(currentSearchResult, userCriteriaArray, people){
   let continueSearch;
-  currentSearchResult = searchCriteriaSwitch(currentSearchResult = people);
+  for(let i = 0; i < userCriteriaArray.length; i++){
+    currentSearchResult = searchCriteriaSwitch(userCriteriaArray[i], currentSearchResult);
+  }
+  displayPeople(currentSearchResult); // Display List of Result
   continueSearch = promptFor("Do you wish to narrow this search down?", yesNo);
   if(continueSearch === "yes"){
-    searchCriteria(currentSearchResult)
+    let userNewCriteria = prompt(`What criteria would you like to filter this search by? Please type the corresponding number.\n1:Gender, 2:DOB, 3:Height, 4:Weight, 5:Eye Color, 6:Occupation, 7:Parents, 8:Current Spouse`);
+    searchCriteria(currentSearchResult, userNewCriteria, currentSearchResult);
   }
   else if(continueSearch === "no"){
-    displayPeople(currentSearchResult); // Display List of Result
     app(people); // restart app
   }
+}
+// Search Criteria Functions Initializer //Code By: Matt Taylor
+function searchCriteriaInitializer(people){
+  let currentSearchResult = people;
+  let userCriteriaArray = userCriteriaInput()
+  return searchCriteria(currentSearchResult, userCriteriaArray, people);
 } 
 
 //#endregion
