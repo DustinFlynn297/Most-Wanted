@@ -40,7 +40,7 @@ function mainMenu(person, people){
 
   switch(displayOption){
     case "info":
-    return displayPerson(person); //Displays all personal information on that person.
+      return displayPerson(person); //Displays all personal information on that person.
     break;
     case "family":
     // TODO: get person's family
@@ -207,8 +207,8 @@ function userCriteriaInput(){
     userCriteriaInput();
   }
   else if(userCriteriaArray.length === 0){
-    alert("Invalid Response.")
-    userCriteriaInput()
+    alert("Invalid Response.");
+    userCriteriaInput();
   }
   else{
     return userCriteriaArray;
@@ -251,6 +251,16 @@ function searchCriteria(currentSearchResult, userCriteriaArray, people){
   let continueSearch;
   for(let i = 0; i < userCriteriaArray.length; i++){
     currentSearchResult = searchCriteriaSwitch(userCriteriaArray[i], currentSearchResult);
+  }
+  if(currentSearchResult.length === 1){
+    displayPeople(currentSearchResult);
+    let userChoice = promptFor("Do you wish to look up more information on this individual? Yes or No", yesNo).toLowerCase;
+    if(userChoice = "yes"){
+      return mainMenu(currentSearchResult[0], people);
+    }
+    else{
+      return app(people);
+    }
   }
   displayPeople(currentSearchResult); // Display List of Result
   continueSearch = promptFor("Do you wish to narrow this search down?", yesNo);
@@ -336,9 +346,19 @@ function descendants(person, people){
   else{
     displayPeople(totalDescendants);
     totalDescendants = []; //Wipes results for next search, if searching the same person.
+    // return mainMenu(person[0], people); //Figure out how to store original search criteria to return to.
     return app(people);
   }
 }
+
+//#endregion
+
+//Descendent Functions
+//Functions to help find the descendent of a specific person
+/////////////////////////////////////////////////////////////////
+//#region 
+
+// function immediateFamilySearch()
 
 //#endregion
 
