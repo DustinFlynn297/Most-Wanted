@@ -307,15 +307,15 @@ function displayPerson(person){
 /////////////////////////////////////////////////////////////////
 //#region 
 
-//Designate the person to find the descendents of.
-//Search the DB to find anyone with a parent with that matching ID
-//Does that kid have any kids? Repeat Step 1 and 2 until no other descendents
-
 // Displays descendants by searching parent ID. // Code by Matt & Dustin
+/// Fix totalDescendants and Fix Main Menu Function
+let totalDescendants = [];
 function descendants(person, people){
   let foundDescendants;
-  for (let j = 0; j < person.length; i++){
-    let parentID = person[j].id;
+  // let totalDescendants;
+  for (let j = 0; j < person.length || j < 1; j++){
+    let currentParent = person[j] || person;
+    let parentID = currentParent.id;
     foundDescendants = people.filter(function(parent){
       for (let i = 0; i < 2; i++){
         if(parent.parents[i] === parentID){
@@ -327,14 +327,16 @@ function descendants(person, people){
       } 
     })
   }
-  let totalDescendants = foundDescendants + totalDescendants;
+  for(let i = 0; i < foundDescendants.length; i++){
+    totalDescendants.push(foundDescendants[i]);
+  }  
   if(foundDescendants.length !== 0){
-    totalDescendants = descendants(foundDescendants, people);
+    descendants(foundDescendants, people);
   }
- 
   else{
     displayPeople(totalDescendants);
-    mainMenu(person, people);
+    totalDescendants = []; //Wipes results for next search, if searching the same person.
+    return app(people);
   }
 }
 
