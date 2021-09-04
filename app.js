@@ -37,14 +37,17 @@ function mainMenu(person, people){
     case "info":
       let personInfoString = displayPerson(person);
       alert(personInfoString); //Displays all personal information on that person.
+      mainMenu(person, people); //Allows user to ask for other information
       break;
     case "family":
       let immediateFamilyString = immediateFamilySearch(person, people);
-      alert(immediateFamilyString);
+      alert(immediateFamilyString); //Displays immediate family members for that person.
+      mainMenu(person, people); //Allows user to ask for other information
       break;
     case "descendants":
       let descendantSearchResults = descendants(person, people);
       displayPeople(descendantSearchResults); //Displays all descendents for that person.
+      mainMenu(person, people); //Allows user to ask for other information
       break;
     case "restart":
       app(people); // restart
@@ -77,22 +80,13 @@ function searchByName(people){
   })
   return foundPerson; 
 }
-//Takes an initial input and reduces it into a usable input
-function reducer(response){
-  return response.split(" ").join("");
-}
-//Refactor for the search trait filters, Condenses the multiple traits into one search criteria function ran by the search switch case.
-function searchByTrait(people, trait, question){
-  let searchTrait = trait;
-  let foundMatches = [];
-  let selectedTrait = prompt(question).toLowerCase();
-  foundMatches = people.filter(function(person){
-    if(person[reducer(searchTrait)] == selectedTrait){
-      return true;
-    }
-  })
-  return foundMatches;
-}
+
+// Search Criteria Functions Initializer //Code By: Matt Taylor
+function searchCriteriaInitializer(people){
+  let currentSearchResult = people;
+  let userCriteriaArray = userCriteriaInput()
+  return searchCriteria(currentSearchResult, userCriteriaArray, people);
+} 
 
 //Takes user input to determine criteria to search by. //Code By: Matt Taylor
 function userCriteriaInput(){
@@ -111,30 +105,8 @@ function userCriteriaInput(){
   }
   
 }
-// Search Criteria Input //Code By: Matt Taylor
-function searchCriteriaSwitch(userCriteria, people){
-  switch(userCriteria){
-    case "1":
-      return searchByTrait(people, "gender", `What gender would you like to search for?`);      
-    case "2":
-      return searchByTrait(people, "dob", `What is the persons date of birth you would like to search for?\nmm/dd/yyyy`);      
-    case "3":
-      return searchByTrait(people, "height", `What is the person's height in inches you would like to search for?`);      
-    case "4":
-      return searchByTrait(people, "weight", `What is the person's weight in pounds you would like to search for?`);      
-    case "5":
-      return searchByTrait(people, "eyeColor", `What eye color would you like to search for?`);
-    case "6":
-      return searchByTrait(people, "occupation", `What occupation would you like to search for?`);      
-    case "7":
-      return searchByTrait(people, "parents", `What is the ID of the person's Parent you would like to search for?`);      
-    case "8":
-      return searchByTrait(people, "currentSpouse", `What is the ID of the person's Spouse you would like to search for?`);      
-    default:
-      app(people);   
-  }
-}
-// Search Criteria User Interface with recursion //Code By: Matt Taylor
+
+// Search Criteria User Interface with recursion //Code By: Matt Taylor  ////Rafactor Later////
 function searchCriteria(currentSearchResult, userCriteriaArray, people){
   let continueSearch;
   for(let i = 0; i < userCriteriaArray.length; i++){
@@ -160,12 +132,49 @@ function searchCriteria(currentSearchResult, userCriteriaArray, people){
     app(people); // restart app
   }
 }
-// Search Criteria Functions Initializer //Code By: Matt Taylor
-function searchCriteriaInitializer(people){
-  let currentSearchResult = people;
-  let userCriteriaArray = userCriteriaInput()
-  return searchCriteria(currentSearchResult, userCriteriaArray, people);
-} 
+
+//Refactor for the search trait filters, Condenses the multiple traits into one search criteria function ran by the search switch case.
+function searchByTrait(people, trait, question){
+  let searchTrait = trait;
+  let foundMatches = [];
+  let selectedTrait = prompt(question).toLowerCase();
+  foundMatches = people.filter(function(person){
+    if(person[reducer(searchTrait)] == selectedTrait){
+      return true;
+    }
+  })
+  return foundMatches;
+}
+
+// Search Criteria Input //Code By: Matt Taylor
+function searchCriteriaSwitch(userCriteria, people){
+  switch(userCriteria){
+    case "1":
+      return searchByTrait(people, "gender", `What gender would you like to search for?`);      
+    case "2":
+      return searchByTrait(people, "dob", `What is the persons date of birth you would like to search for?\nmm/dd/yyyy`);      
+    case "3":
+      return searchByTrait(people, "height", `What is the person's height in inches you would like to search for?`);      
+    case "4":
+      return searchByTrait(people, "weight", `What is the person's weight in pounds you would like to search for?`);      
+    case "5":
+      return searchByTrait(people, "eyeColor", `What eye color would you like to search for?`);
+    case "6":
+      return searchByTrait(people, "occupation", `What occupation would you like to search for?`);      
+    case "7":
+      return searchByTrait(people, "parents", `What is the ID of the person's Parent you would like to search for?`);      
+    case "8":
+      return searchByTrait(people, "currentSpouse", `What is the ID of the person's Spouse you would like to search for?`);      
+    default:
+      app(people);   
+  }
+}
+
+//Takes an initial input and reduces it into a usable input. 
+///Was created to allow us to get around the scope limitation inside searchByTrait(...) to avoid using 100 lines of code to do the same thing as 8 lines.
+function reducer(response){
+  return response.split(" ").join("");
+}
 
 //#endregion
 
@@ -190,8 +199,6 @@ function displayPeopleNoAlert(people){
 
 //Displays the personal information of the personnel matching the search criteria.  //Code by: Dustin Flynn
 function displayPerson(person){
-  // print all of the information about a person:
-  // height, weight, age, name, occupation, eye color.
   let personInfo = "ID: " + person.id + "\n";
   personInfo += "First Name: " + person.firstName + "\n";
   personInfo += "Last Name: " + person.lastName + "\n";
@@ -242,21 +249,19 @@ function descendants(person, people){
 //Functions to help find the immediate family of a specific person
 /////////////////////////////////////////////////////////////////
 //#region 
-////find the siblings ///new Code
 
 //Family Search Initializer to start search for Immediate Family //Code By: Matt Taylor
 function immediateFamilySearch(person, people){
-  let parents = immediateFamilyParents(person, people);
-  let spouse = immediateFamilySpouse(person, people);
-  let children = immediateFamilyChildren(person, people);
-  let siblings = immediateFamilySiblings(person, people);
-  let familyRelationsString = familyRelationsDisplay(person, parents, spouse, children, siblings, people);
+  let parents = foundFamilyDisplayCheck(immediateFamilyParents(person, people));
+  let spouse = foundFamilyDisplayCheck(immediateFamilySpouse(person, people));
+  let children = foundFamilyDisplayCheck(immediateFamilyChildren(person, people));
+  let siblings = foundFamilyDisplayCheck(immediateFamilySiblings(person, people));
+  let familyRelationsString = familyRelationsDisplay(person, parents, spouse, children, siblings);
   return familyRelationsString;
 }
 //Finds the parents for the individual //Code By: Matt Taylor
-function immediateFamilyParents(person, people){
+function immediateFamilyParents(person, people, totalParents = []){
   let foundParents = [];
-  let totalParents = [];
   let parentIDArray = person.parents;
   for(let i = 0; i < parentIDArray.length; i++){
     foundParents = people.filter(function(parentSearchID){
@@ -270,14 +275,8 @@ function immediateFamilyParents(person, people){
     for(let i = 0; i < foundParents.length; i++){
       totalParents.push(foundParents[i]);
     }
-  }  
-  if(totalParents.length > 0){
-    let parents = displayPeopleNoAlert(totalParents);
-    return parents;
-  }
-  else{
-    return "No parents found in Database."
-  }
+  } 
+  return totalParents; 
 } 
 //Find the spouse for the individual //Code By: Matt Taylor
 function immediateFamilySpouse(person, people){
@@ -290,13 +289,7 @@ function immediateFamilySpouse(person, people){
       return false;
     }  
   })
-  if(foundSpouse.length > 0){
-    let spouse = displayPeopleNoAlert(foundSpouse);
-    return spouse;
-  }
-  else{
-    return "No spouse found in Database."
-  }  
+  return foundSpouse;
 }
 //Finds the immediate children for the individual //Code By: Matt Taylor
 function immediateFamilyChildren(person, people){
@@ -311,15 +304,8 @@ function immediateFamilyChildren(person, people){
       } 
     } 
   })
-  if(foundChildren.length > 0){
-    let children = displayPeopleNoAlert(foundChildren);
-    return children;
-  }
-  else{
-    return "No children found in Database."
-  } 
+  return foundChildren;
 }
-
 //Finds the children of each parent of the individual to determine their siblings
 function immediateFamilySiblings(person, people, totalSiblings = []){
   let foundSiblings = [];
@@ -343,12 +329,16 @@ function immediateFamilySiblings(person, people, totalSiblings = []){
       }
     }
   }
-  if(totalSiblings.length > 0){
-    let siblings = displayPeopleNoAlert(totalSiblings);
-    return siblings;
-  }  
+  return totalSiblings;
+}
+//Checks the found results from the family search to verify that there was a return and than formats the result into a string.
+function foundFamilyDisplayCheck(foundFamily){
+  if(foundFamily.length > 0){
+    let family = displayPeopleNoAlert(foundFamily);
+    return family;
+  }
   else{
-    return "No siblings found in Database.";
+    return `No family matches found in Database.`
   }
 }
 
