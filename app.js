@@ -1,5 +1,9 @@
 "use strict"
 
+////Known Bugs:
+//No known currently
+////Needs Work on:
+//Validation
 
 //Menu functions.
 //Used for the overall flow of the application.
@@ -37,20 +41,20 @@ function mainMenu(person, people){
     case "info":
       let personInfoString = displayPerson(person);
       alert(personInfoString); //Displays all personal information on that person.
-      mainMenu(person, people); //Allows user to ask for other information
+      mainMenu(person, people); //Allows user to ask for other information 
       break;
     case "family":
       let immediateFamilyString = immediateFamilySearch(person, people);
       alert(immediateFamilyString); //Displays immediate family members for that person.
-      mainMenu(person, people); //Allows user to ask for other information
+      mainMenu(person, people); //Allows user to ask for other information 
       break;
     case "descendants":
       let descendantSearchResults = descendants(person, people);
       displayPeople(descendantSearchResults); //Displays all descendents for that person.
-      mainMenu(person, people); //Allows user to ask for other information
+      mainMenu(person, people); //Allows user to ask for other information 
       break;
     case "restart":
-      app(people); // restart
+      return app(people); // restart
       break;
     case "quit":
       return; // stop execution
@@ -84,55 +88,69 @@ function searchByName(people){
 // Search Criteria Functions Initializer //Code By: Matt Taylor
 function searchCriteriaInitializer(people){
   let currentSearchResult = people;
-  let userCriteriaArray = userCriteriaInput()
-  return searchCriteria(currentSearchResult, userCriteriaArray, people);
+  let userCriteria = userCriteriaInput()
+  currentSearchResult = searchCriteria(currentSearchResult, userCriteria);
+  if(currentSearchResult.length === 1){
+    return matchFound(currentSearchResult, people);
+  }
+  currentSearchResult = narrowSearchResults(currentSearchResult);
+  if(currentSearchResult.length === 1){
+    return matchFound(currentSearchResult, people);
+  }
+  alert("Search Operations Complete. Returning to Main Menu.")
+  return app(people);
 } 
 
-//Takes user input to determine criteria to search by. //Code By: Matt Taylor
+// Takes user input to determine criteria to search by. //Code By: Matt Taylor
 function userCriteriaInput(){
-  let criteriaString = prompt(`What criteria would you like to search by? Please type the corresponding number(s).\n1:Gender, 2:DOB, 3:Height, 4:Weight, 5:Eye Color, 6:Occupation, 7:Parents, 8:Current Spouse`);
-  let userCriteriaArray = criteriaString.split(" ");
-  if(userCriteriaArray.length > 5){
+  let userCriteria = promptFor(`What criteria would you like to search by? Please type the corresponding number(s).\n1:Gender, 2:DOB, 3:Height, 4:Weight, 5:Eye Color, 6:Occupation, 7:Parents, 8:Current Spouse`, multiNumberInputKey).split(" ");
+  if(userCriteria.length > 5){
     alert("Please enter a maximum of 5 criteria.");
     userCriteriaInput();
   }
-  else if(userCriteriaArray.length === 0){
+  else if(userCriteria.length === 0){
     alert("Invalid Response.");
     userCriteriaInput();
   }
   else{
-    return userCriteriaArray;
+    return userCriteria;
   }
-  
 }
 
-// Search Criteria User Interface with recursion //Code By: Matt Taylor  ////Rafactor Later////
-function searchCriteria(currentSearchResult, userCriteriaArray, people){
-  let continueSearch;
-  for(let i = 0; i < userCriteriaArray.length; i++){
-    currentSearchResult = searchCriteriaSwitch(userCriteriaArray[i], currentSearchResult);
+// Search Criteria User Interface with recursion //Code By: Matt Taylor  ////Rafactor complete: Search Criteria is now searchCriteria,narrowSearchResults, and Match Found////
+function searchCriteria(currentSearchResult, userCriteria){
+  for(let i = 0; i < userCriteria.length; i++){
+    currentSearchResult = searchCriteriaSwitch(userCriteria[i], currentSearchResult);
   }
-  if(currentSearchResult.length === 1){
-    displayPeople(currentSearchResult);
-    let userChoice = promptFor("Do you wish to look up more information on this individual? Yes or No", yesNo).toLowerCase;
-    if(userChoice = "yes"){
-      return mainMenu(currentSearchResult[0], people);
-    }
-    else{
-      return app(people);
-    }
-  }
+  return currentSearchResult;
+}  
+
+  // displayPeople(currentSearchResult); // Display List of Results
+//Takes the current search criteria and allows the user to narrow it down in steps till they get the result they want. //Code By: Matt Taylor
+function narrowSearchResults(currentSearchResult){
   displayPeople(currentSearchResult); // Display List of Results
-  continueSearch = promptFor("Do you wish to narrow this search down?", yesNo);
-  if(continueSearch === "yes"){
-    let userNewCriteria = prompt(`What criteria would you like to filter this search by? Please type the corresponding number.\n1:Gender, 2:DOB, 3:Height, 4:Weight, 5:Eye Color, 6:Occupation, 7:Parents, 8:Current Spouse`);
-    searchCriteria(currentSearchResult, userNewCriteria, currentSearchResult);
+  if(currentSearchResult.length > 1){
+    let continueSearch = promptFor("Do you wish to narrow this search down?", yesNo);
+    if(continueSearch == "yes"){
+      let userCriteria = userCriteriaInput()
+      currentSearchResult = searchCriteria(currentSearchResult, userCriteria);
+      if(currentSearchResult.length != 1){
+        currentSearchResult = narrowSearchResults(currentSearchResult);
+      }
+    }
   }
-  else if(continueSearch === "no"){
-    app(people); // restart app
+  return currentSearchResult; 
+}
+//Once the search results get narrowed down to a match this will allow the user to send that search result to the main menu to gather more information. //Code By: Matt Taylor
+function matchFound(currentSearchResult, people){
+  let userChoice = promptFor(`Do you wish to look up more information on the individual, ${currentSearchResult[0].firstName + " " + currentSearchResult[0].lastName}? Yes or No`, yesNo).toLowerCase();
+  if(userChoice == "yes"){
+    return mainMenu(currentSearchResult[0], people);
+  }
+  else{
+    return app(people);
   }
 }
-
 //Refactor for the search trait filters, Condenses the multiple traits into one search criteria function ran by the search switch case.
 function searchByTrait(people, trait, question){
   let searchTrait = trait;
@@ -378,10 +396,24 @@ function autoValid(input){
   return true; // default validation only
 }
 
-//Unfinished validation function you can use for any of your custom validation callbacks.
-//can be used for things like eye color validation for example.
-function customValidation(input){
-  
+//Input Validation for prompts that require numeric responses between 1 to 9
+function numberInputValidation(input){
+  for(let i = 0; i <= 9; i++){
+    if(i == input){
+      return true
+    }
+  }  
+  return false; 
+}
+//Takes in multiple numbers and feeds them into the numberInputValidation one at a time to validate.
+function multiNumberInputKey(input){
+  for(let i = 0; i < input.length; i++){
+    let result = numberInputValidation(input[i])
+    if(result == false){
+      return false
+    }
+  }
+  return true
 }
 
 //#endregion
@@ -509,32 +541,36 @@ function customValidation(input){
 
 /////////Old Search Criteria above///////////
 
-////////Old Descendents Search////////
+// ////////Old Descendents Search////////
+// function descendants(person, people, totalDescendants = []){
+//   let foundDescendants;
+//   for (let j = 0; j < person.length || j < 1; j++){
+//     let currentParent = person[j] || person;
+//     let parentID = currentParent.id;
+//     foundDescendants = people.filter(function(parent){
+//       for (let i = 0; i < 2; i++){
+//         if(parent.parents[i] === parentID){
+//           return true;
+//         }  
+//         else{
+//           return false;
+//         } 
+//       } 
+//     })
+//   }
+//   for(let i = 0; i < foundDescendants.length; i++){
+//     totalDescendants.push(foundDescendants[i]);
+//   }  
+//   if(foundDescendants.length !== 0){
+//     descendants(foundDescendants, people, totalDescendants);
+//   }
+//   else{
+//     displayPeople(totalDescendants);
+//     totalDescendants = []; //Wipes results for next search, if searching the same person.
+//     // return mainMenu(person[0], people); //Figure out how to store original search criteria to return to.
+//     return app(people);
+//   }
+// }
 
-  // let foundDescendants;
-  // for (let j = 0; j < person.length || j < 1; j++){
-  //   let currentParent = person[j] || person;
-  //   let parentID = currentParent.id;
-  //   foundDescendants = people.filter(function(parent){
-  //     for (let i = 0; i < 2; i++){
-  //       if(parent.parents[i] === parentID){
-  //         return true;
-  //       }  
-  //       else{
-  //         return false;
-  //       } 
-  //     } 
-  //   })
-  // }
-  // for(let i = 0; i < foundDescendants.length; i++){
-  //   totalDescendants.push(foundDescendants[i]);
-  // }  
-  // if(foundDescendants.length !== 0){
-  //   descendants(foundDescendants, people, totalDescendants);
-  // }
-  // else{
-  //   displayPeople(totalDescendants);
-  //   totalDescendants = []; //Wipes results for next search, if searching the same person.
-  //   // return mainMenu(person[0], people); //Figure out how to store original search criteria to return to.
-  //   return app(people);
-  // }
+//////////////////////////////////////
+//End of Application
