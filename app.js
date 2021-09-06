@@ -155,7 +155,7 @@ function matchFound(currentSearchResult, people){
 function searchByTrait(people, trait, question){
   let searchTrait = trait;
   let foundMatches = [];
-  let selectedTrait = prompt(question).toLowerCase();
+  let selectedTrait = promptFor(question, searchInputValidation).toLowerCase();
   foundMatches = people.filter(function(person){
     if(person[reducer(searchTrait)] == selectedTrait){
       return true;
@@ -415,6 +415,14 @@ function multiNumberInputKey(input){
   }
   return true
 }
+function searchInputValidation(input){
+  if(input.length <= 10 && input.length != 0){
+    return true
+  }
+  else{
+    return false
+  }
+}
 
 //#endregion
 
@@ -569,6 +577,33 @@ function multiNumberInputKey(input){
 //     totalDescendants = []; //Wipes results for next search, if searching the same person.
 //     // return mainMenu(person[0], people); //Figure out how to store original search criteria to return to.
 //     return app(people);
+//   }
+// }
+
+//   ////////Old Search Criteria Function//////////////
+// function searchCriteria(currentSearchResult, userCriteriaArray, people){
+//   let continueSearch;
+//   for(let i = 0; i < userCriteriaArray.length; i++){
+//     currentSearchResult = searchCriteriaSwitch(userCriteriaArray[i], currentSearchResult);
+//   }
+//   if(currentSearchResult.length === 1){
+//     displayPeople(currentSearchResult);
+//     let userChoice = promptFor("Do you wish to look up more information on this individual? Yes or No", yesNo).toLowerCase;
+//     if(userChoice = "yes"){
+//       return mainMenu(currentSearchResult[0], people);
+//     }
+//     else{
+//       return app(people);
+//     }
+//   }
+//   displayPeople(currentSearchResult); // Display List of Results
+//   continueSearch = promptFor("Do you wish to narrow this search down?", yesNo);
+//   if(continueSearch === "yes"){
+//     let userNewCriteria = prompt(`What criteria would you like to filter this search by? Please type the corresponding number.\n1:Gender, 2:DOB, 3:Height, 4:Weight, 5:Eye Color, 6:Occupation, 7:Parents, 8:Current Spouse`);
+//     searchCriteria(currentSearchResult, userNewCriteria, currentSearchResult);
+//   }
+//   else if(continueSearch === "no"){
+//     app(people); // restart app
 //   }
 // }
 
